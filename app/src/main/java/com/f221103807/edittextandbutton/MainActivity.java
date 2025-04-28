@@ -88,6 +88,64 @@ public class MainActivity extends AppCompatActivity {
                 builder.show();
             }
         });
+
+        ubahButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String nim_mhs = nimEditText.getText().toString();
+                String nama_mhs = namaEditText.getText().toString();
+                String kelas_mhs = kelasEditText.getText().toString();
+                String semester_mhs = semesterEditText.getText().toString();
+                String jurusan_mhs = jurusanEditText.getText().toString();
+
+                if (TextUtils.isEmpty(nim_mhs)) {
+                    Toast.makeText(MainActivity.this, "NIM tidak boleh kosong untuk mengubah data", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                Boolean checknim = db.checknim(nim_mhs);
+                if (checknim) {
+                    Boolean update = db.updateDataMhs(nim_mhs, nama_mhs, kelas_mhs, semester_mhs, jurusan_mhs);
+                    if (update) {
+                        Toast.makeText(MainActivity.this, "Data Berhasil Diubah", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(MainActivity.this, "Data Gagal Diubah", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(MainActivity.this, "Data tidak ditemukan", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        hapusButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String nim_mhs = nimEditText.getText().toString();
+
+                if (TextUtils.isEmpty(nim_mhs)) {
+                    Toast.makeText(MainActivity.this, "NIM tidak boleh kosong untuk menghapus data", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                Boolean checknim = db.checknim(nim_mhs);
+                if (checknim) {
+                    Boolean delete = db.deleteDataMhs(nim_mhs);
+                    if (delete) {
+                        Toast.makeText(MainActivity.this, "Data Berhasil Dihapus", Toast.LENGTH_SHORT).show();
+                        namaEditText.setText("");
+                        kelasEditText.setText("");
+                        semesterEditText.setText("");
+                        jurusanEditText.setText("");
+                        nimEditText.setText("");
+                    } else {
+                        Toast.makeText(MainActivity.this, "Data Gagal Dihapus", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(MainActivity.this, "Data tidak ditemukan", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
